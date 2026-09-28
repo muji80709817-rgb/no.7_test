@@ -1,0 +1,18 @@
+{
+  "name": "plan-do-see-diary-auth",
+  "version": "1.0.0",
+  "description": "Plan-Do-See Diary with Authentication for Task 7",
+  "main": "api/index.js",
+  "scripts": {
+    "start": "node api/index.js",
+    "dev": "nodemon api/index.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}

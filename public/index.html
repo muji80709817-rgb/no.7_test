@@ -1,0 +1,48 @@
+// 서버 연동용 자바스크립트 수정 부분
+async function loadTodos() {
+  const token = localStorage.getItem('token');
+  
+  const res = await fetch('/api/todos', {
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+
+  // 거절 응답 처리 (과제 7 핵심 통과 기준)
+  if (res.status === 401 || res.status === 403) {
+    alert('인증이 유효하지 않거나 권한이 없습니다. 다시 로그인해 주세요.');
+    handleLogout();
+    return;
+  }
+
+  const serverTodos = await res.json();
+  db.todos = serverTodos;
+  renderAll();
+}
+
+async function createTodo() {
+  const title = document.getElementById('todoTitle').value.trim();
+  if (!title) return;
+
+  const token = localStorage.getItem('token');
+  const todoData = {
+    title,
+    dueDate: document.getElementById('todoDueDate').value || '2026-11-01',
+    priority: document.getElementById('todoPriority').value,
+    tag: document.getElementById('todoTag').value || '기본',
+    estTime: Number(document.getElementById('todoEstTime').value) || 60,
+    completed: false
+  };
+
+  const res = await fetch('/api/todos', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(todoData)
+  });
+
+  if (res.ok) {
+    document.getElementById('todoTitle').value = '';
+    loadTodos(); // 서버에서 내 목록 다시 불러오기
+  }
+}
